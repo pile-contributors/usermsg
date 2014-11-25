@@ -1,0 +1,126 @@
+/**
+ * @file usermsg-config.h
+ * @brief The content of this file is dynamically generated at compile time by CMake.
+ * @author 
+ * @copyright Copyright 2014 piles contributors. All rights reserved.
+ * This file is released under the
+ * [MIT License](http://opensource.org/licenses/mit-license.html)
+ */
+
+#ifndef GUARD_USERMSG_CONFIG_H_INCLUDE
+#define GUARD_USERMSG_CONFIG_H_INCLUDE
+
+
+/**
+ * @def Qt5Core_FOUND
+ * @brief When defined indicates that the Qt 5 headers are available
+ */
+#cmakedefine Qt5Core_FOUND
+
+/**
+ * @def Qt5Core_FOUND
+ * @brief When defined indicates that the Qt 4 headers are available
+ */
+#cmakedefine Qt4_FOUND
+
+/**
+ * @def PILES_HAVE_QT
+ * @brief When defined indicates that either Qt 4 or Qt 5 headers are available
+ */
+#if defined(Qt5Core_FOUND) || defined(Qt4_FOUND)
+#define PILES_HAVE_QT
+#endif
+
+// use Qt definitions when available
+#ifdef PILES_HAVE_QT
+#include <QtGlobal>
+#endif
+
+//! the name of this project
+#define USERMSG_PROJECT_NAME       "@USERMSG_NAME@"
+
+//! major version (ABI not preserved between these)
+#define USERMSG_MAJOR_VERSION      (@USERMSG_MAJOR_VERSION@)
+
+//! minor version; ABI is preserved
+#define USERMSG_MINOR_VERSION      (@USERMSG_MINOR_VERSION@)
+
+//! bug fixes
+#define USERMSG_PATCH_VERSION      (@USERMSG_PATCH_VERSION@)
+
+//! the version as a 32-bit integer
+#define USERMSG_VERSION            (\
+    USERMSG_MAJOR_VERSION * 0x100000 + \
+    USERMSG_MINOR_VERSION * 0x1000 + \
+    USERMSG_PATCH_VERSION * 0x1)
+
+//! version as a string
+#define USERMSG_VERSION_STRING     "@USERMSG_VERSION_STRING@"
+
+//! when it was build (UTC)
+#define USERMSG_BUILD_TIME         "@USERMSG_BUILD_TIME@"
+
+
+/**
+ * @def USERMSG_DEBUG
+ * @brief Indicates whether the debug features should be enabled or disabled
+ */
+#ifndef USERMSG_DEBUG
+#  ifdef USERMSG_FORCE_DEBUG
+#    define USERMSG_DEBUG 1
+#  else
+#cmakedefine USERMSG_DEBUG
+#  endif
+#endif
+
+
+/**
+ * @def USERMSG_STATIC
+ * @brief If defined it indicates a static library being build
+ */
+#cmakedefine USERMSG_STATIC
+
+/**
+ * @def USERMSG_PILE
+ * @brief If defined it indicates a pile usage
+ */
+#cmakedefine USERMSG_PILE
+
+
+/**
+ * @def USERMSG_SHARED
+ * @brief If defined it indicates a shared library
+ *
+ * USERMSG_SHARED is defined when building the project
+ * and undefined when a file from another project
+ * includes the file.
+ */
+
+
+/**
+ * @def USERMSG_EXPORT
+ * @brief makes the sources compatible with all kinds of deployments.
+ */
+#if defined(USERMSG_STATIC)
+#   define      USERMSG_EXPORT
+#elif defined(USERMSG_PILE)
+#   define      USERMSG_EXPORT      @USERMSG_EXPORT@
+#elif defined(USERMSG_SHARED)
+#   ifdef PILES_HAVE_QT
+#       define  USERMSG_EXPORT      Q_DECL_EXPORT
+#   elif defined(_MSC_VER)
+#       define  USERMSG_EXPORT      __declspec(dllexport)
+#   else
+#       define  USERMSG_EXPORT      __attribute__((visibility("default")))
+#   endif
+#else
+#   ifdef PILES_HAVE_QT
+#       define  USERMSG_EXPORT      Q_DECL_IMPORT
+#   elif defined(_MSC_VER)
+#       define  USERMSG_EXPORT      __declspec(dllimport)
+#   else
+#       define  USERMSG_EXPORT      __attribute__((visibility("default")))
+#   endif
+#endif
+
+#endif // GUARD_USERMSG_CONFIG_H_INCLUDE
