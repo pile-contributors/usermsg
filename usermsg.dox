@@ -1,0 +1,137 @@
+/**
+@page usermsg UserMsg
+
+@section usermsg_intro Introduction
+
+The UserMsg class provides a way to manage and dispatch
+messages that are intended for the user. The library
+does not provide the GUI to actually show the
+messages. Instread, a callback mechanism is employed
+and the user is expected to provide necessary callbacks.
+Also, the Qt signal/slot mechanism is also used, so the
+user has some flexibility in implementing the front-end.
+
+@section usermsg_manager Manager class
+
+UserMsgMan is the manager class. A singleton is created
+internally and it manages the settings and behaviour
+of UserMsg. The manager can be explicitly initialized
+but it does not have to. Any static function that will
+be invoked will first check for its existance and it
+will create it if it does not exists. Resources
+can be freed using UserMsgMan::end(), for example at
+the end of the application.
+
+The messaging system can be disabled temporarly by calling
+UserMsgMan::disable(). It
+will accumulate the messages internaly and show them
+when UserMsgMan::enable() is called. The messages can be collapsed
+into one per type.
+
+An initialization sequence that makes use of all the features
+of the manager may look like so:
+
+@code
+int main (int argc, char *argv[])
+{
+    QApplication apl(argc, argv);
+    int ret_val = 0;
+
+    UserMsgMan::init (true); // true - start disabled; cache the messages until GUI is in place
+    UserMsgMan::filter (UserMsg::ERROR | UserMsg::WARNING);
+
+    MainWindow mw;
+    mw.show ();
+
+    // connect the signals to MainWindow
+    UserMsgMan::connect (&mw, SLOT("userMessage(UserMsg::Type, const QString &)));
+
+    UserMsgMan::enable (true); // show any cached messages
+    // we can choose to collapse all messages in a single message before
+    // transmitting them to be shown. In a gui that uses as front-end
+    // QMessageBox, for example, without this option the user would see
+    // one message box for each message that was produced.
+
+    apl.exec ();
+
+    return 0;
+}
+UserMsg::err ("An error message that is shown right away.");
+UserMsg::wrn ("A warning message that is shown right away.");
+UserMsg::info ("An informative message that is shown right away.");
+UserMsg::msg (UserMsg::ERROR, "An error message that is shown right away.");
+@endcode
+
+
+@section usermsg_frontend GUI Front-end
+
+The frontend has a range of options to connect
+and use the library.
+
+@subsection usermsg_frontend_callbacks Callbacks
+
+Following callbacks are available:
+
+- enabled / disabled
+- show message for all kinds of messages
+- show message for a particular kind (one per kind)
+
+@subsection usermsg_frontend_signals Qt Signals
+
+Following signals are available:
+
+- show message for all kinds of messages
+- show message for a particular kind (one per kind)
+- show message for a particular kind (one per kind) with extended
+information (time, title)
+
+@section usermsg_frontend UserMsg
+
+A message consists of an optional title, an optional user defined
+value (payload) and a list of zero or more entries.
+
+Each entry consists of a timestamp, a type and a message.
+
+@section usermsg_informative Informative messages
+
+The informative messages are errors, warnings and
+general information that is intended to the user.
+The user is only informed about the event and,
+depending on the GUI front-end, may need to confirm
+message acknowledgement.
+
+A message can be shown right away:
+
+@code
+UserMsg::err ("An error message that is shown right away.");
+UserMsg::wrn ("A warning message that is shown right away.");
+UserMsg::info ("An informative message that is shown right away.");
+UserMsg::msg (UserMsg::ERROR, "An error message that is shown right away.");
+@endcode
+
+Messages can be accumulated in an instance
+of the class and presented later
+(or never presented):
+
+@code
+UserMsg um;
+um.addErr ("An error message that is not shown right away.");
+um.addWrn ("A warning message that is not shown right away.");
+um.addInfo ("A warning message that is not shown right away.");
+um.add (UserMsg::DEBUG_WARNING, "A warning message that is not shown right away.");
+@endcode
+
+To show the content accumulated in the structure, if any,
+use:
+
+@code
+um.show ();
+@endcode
+
+This will present the user with the messages
+the user elected to see.
+
+
+
+
+*/

@@ -12,23 +12,32 @@ macro    (usermsgInit
           ref_cnt_use_mode)
 
     # default name
-    if (NOT TEM_PILE_INIT_NAME)
-        set(TEM_PILE_INIT_NAME "UserMsg")
+    if (NOT USER_MSG_INIT_NAME)
+        set(USER_MSG_INIT_NAME "UserMsg")
     endif ()
 
     # compose the list of headers and sources
     set(USERMSG_HEADERS
+        "usermsgman.h"
+        "usermsgstg.h"
+        "usermsgentry.h"
         "usermsg.h")
     set(USERMSG_SOURCES
+        "usermsgman.cc"
+        "usermsgstg.cc"
+        "usermsgentry.cc"
         "usermsg.cc")
+    set(USERMSG_QT_MODS
+        "Core"
+        "Widgets")
 
     pileSetSources(
-        "${TEM_PILE_INIT_NAME}"
+        "${USER_MSG_INIT_NAME}"
         "${USERMSG_HEADERS}"
         "${USERMSG_SOURCES}")
 
     pileSetCommon(
-        "${TEM_PILE_INIT_NAME}"
+        "${USER_MSG_INIT_NAME}"
         "0;0;1;d"
         "ON"
         "${ref_cnt_use_mode}"
