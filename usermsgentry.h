@@ -22,12 +22,12 @@ public:
 
     //! kind of the message
     enum Type {
-        ERROR = 0,
-        WARNING,
-        INFO,
-        DBG_ERROR,
-        DBG_WARNING,
-        DBG_INFO
+        UTERROR = 0,
+        UTWARNING,
+        UTINFO,
+        UTDBG_ERROR,
+        UTDBG_WARNING,
+        UTDBG_INFO
     };
 
 private:

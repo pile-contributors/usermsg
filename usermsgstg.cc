@@ -56,12 +56,12 @@ static TypeFlag typeToFlag (UserMsgEntry::Type ty)
     USERMSG_TRACE_ENTRY;
 
     switch (ty) {
-    case UserMsgEntry::ERROR: return TF_ERROR;
-    case UserMsgEntry::WARNING: return TF_WARNING;
-    case UserMsgEntry::INFO: return TF_INFO;
-    case UserMsgEntry::DBG_ERROR: return TF_DBG_ERROR;
-    case UserMsgEntry::DBG_WARNING: return TF_DBG_WARNING;
-    case UserMsgEntry::DBG_INFO: return TF_DBG_INFO;
+    case UserMsgEntry::UTERROR: return TF_ERROR;
+    case UserMsgEntry::UTWARNING: return TF_WARNING;
+    case UserMsgEntry::UTINFO: return TF_INFO;
+    case UserMsgEntry::UTDBG_ERROR: return TF_DBG_ERROR;
+    case UserMsgEntry::UTDBG_WARNING: return TF_DBG_WARNING;
+    case UserMsgEntry::UTDBG_INFO: return TF_DBG_INFO;
     default: return TF_NONE;
     }
 

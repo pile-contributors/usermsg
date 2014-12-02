@@ -77,12 +77,12 @@ UserMsgEntry::~UserMsgEntry()
 QString UserMsgEntry::typeName(UserMsgEntry::Type value)
 {
     switch (value) {
-    case ERROR: return QObject::tr("error");
-    case WARNING: return QObject::tr("warning");
-    case INFO: return QObject::tr("information");
-    case DBG_ERROR: return QObject::tr("debug error");
-    case DBG_WARNING: return QObject::tr("debug warning");
-    case DBG_INFO: return QObject::tr("debug information");
+    case UTERROR: return QObject::tr("error");
+    case UTWARNING: return QObject::tr("warning");
+    case UTINFO: return QObject::tr("information");
+    case UTDBG_ERROR: return QObject::tr("debug error");
+    case UTDBG_WARNING: return QObject::tr("debug warning");
+    case UTDBG_INFO: return QObject::tr("debug information");
     default: return QObject::tr("unknown");
     }
 }
@@ -92,12 +92,12 @@ QString UserMsgEntry::typeName(UserMsgEntry::Type value)
 QString UserMsgEntry::typeNameCap (UserMsgEntry::Type value)
 {
     switch (value) {
-    case ERROR: return QObject::tr("Error");
-    case WARNING: return QObject::tr("Warning");
-    case INFO: return QObject::tr("Information");
-    case DBG_ERROR: return QObject::tr("Debug Error");
-    case DBG_WARNING: return QObject::tr("Debug Warning");
-    case DBG_INFO: return QObject::tr("Debug Information");
+    case UTERROR: return QObject::tr("Error");
+    case UTWARNING: return QObject::tr("Warning");
+    case UTINFO: return QObject::tr("Information");
+    case UTDBG_ERROR: return QObject::tr("Debug Error");
+    case UTDBG_WARNING: return QObject::tr("Debug Warning");
+    case UTDBG_INFO: return QObject::tr("Debug Information");
     default: return QObject::tr("Unknown");
     }
 }

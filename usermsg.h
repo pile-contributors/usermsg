@@ -118,42 +118,42 @@ public:
     inline void
     addErr (
             const QString & s_message) {
-        addMsg (UserMsgEntry::ERROR, s_message);
+        addMsg (UserMsgEntry::UTERROR, s_message);
     }
 
     //! add a warning entry to the list
     inline void
     addWar (
             const QString & s_message) {
-        addMsg (UserMsgEntry::WARNING, s_message);
+        addMsg (UserMsgEntry::UTWARNING, s_message);
     }
 
     //! add an informative entry to the list
     inline void
     addInfo (
             const QString & s_message) {
-        addMsg (UserMsgEntry::INFO, s_message);
+        addMsg (UserMsgEntry::UTINFO, s_message);
     }
 
     //! add an error entry to the list
     inline void
     addDbgErr (
             const QString & s_message) {
-        addMsg (UserMsgEntry::DBG_ERROR, s_message);
+        addMsg (UserMsgEntry::UTDBG_ERROR, s_message);
     }
 
     //! add a warning entry to the list
     inline void
     addDbgWar (
             const QString & s_message) {
-        addMsg (UserMsgEntry::DBG_ERROR, s_message);
+        addMsg (UserMsgEntry::UTDBG_ERROR, s_message);
     }
 
     //! add an informative entry to the list
     inline void
     addDbgInfo (
             const QString & s_message) {
-        addMsg (UserMsgEntry::DBG_INFO, s_message);
+        addMsg (UserMsgEntry::UTDBG_INFO, s_message);
     }
 
     //! add an entry to the list
@@ -169,42 +169,42 @@ public:
     static inline void
     err (
             const QString & s_message) {
-        msg (UserMsgEntry::ERROR, s_message);
+        msg (UserMsgEntry::UTERROR, s_message);
     }
 
     //! show a warning entry
     static inline void
     war (
             const QString & s_message) {
-        msg (UserMsgEntry::WARNING, s_message);
+        msg (UserMsgEntry::UTWARNING, s_message);
     }
 
     //! show an informative entry
     static inline void
     info (
             const QString & s_message) {
-        msg (UserMsgEntry::INFO, s_message);
+        msg (UserMsgEntry::UTINFO, s_message);
     }
 
     //! show an error entry
     static inline void
     dbgErr (
             const QString & s_message) {
-        msg (UserMsgEntry::DBG_ERROR, s_message);
+        msg (UserMsgEntry::UTDBG_ERROR, s_message);
     }
 
     //! show a warning entry
     static inline void
     dbgWar (
             const QString & s_message) {
-        msg (UserMsgEntry::DBG_ERROR, s_message);
+        msg (UserMsgEntry::UTDBG_ERROR, s_message);
     }
 
     //! show an informative entry
     static inline void
     dbgInfo (
             const QString & s_message) {
-        msg (UserMsgEntry::DBG_INFO, s_message);
+        msg (UserMsgEntry::UTDBG_INFO, s_message);
     }
 
     //! show an entry
