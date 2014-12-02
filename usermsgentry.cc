@@ -23,7 +23,7 @@
 UserMsgEntry::UserMsgEntry() :
     message_(),
     moment_(QDateTime::currentDateTime ()),
-    type_(ERROR)
+    type_(UTERROR)
 {
     USERMSG_TRACE_ENTRY;
 

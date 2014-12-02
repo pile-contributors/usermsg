@@ -16,6 +16,7 @@
 #include <QSettings>
 #include <QByteArray>
 #include <QDataStream>
+#include <QVariant>
 
 /**
  * @class UserMsgStg
@@ -120,6 +121,7 @@ QByteArray UserMsgStg::toByteArray () const
     QDataStream out(&buffer);
     out << QString(guard_string);
 
+    out << enabled_flags_;
 
     out << QString(guard_string);
 
@@ -147,7 +149,7 @@ bool UserMsgStg::fromByteArray (QByteArray * value)
         return false;
     }
 
-
+    in >> enabled_flags_;
 
     in >> guard;
     if (guard != guard_string) {
@@ -169,9 +171,11 @@ bool UserMsgStg::toQSettings ( QSettings * stg) const
     USERMSG_TRACE_ENTRY;
     stg->beginGroup ("UserMsg");
 
+    stg->setValue ("enabled_flags_", enabled_flags_);
 
     stg->endGroup ();
     USERMSG_TRACE_EXIT;
+    return true;
 }
 /* ========================================================================= */
 
@@ -187,6 +191,7 @@ bool UserMsgStg::fromQSettings ( QSettings * stg)
     bool b_ret = false;
     for (;;) {
 
+        enabled_flags_ = stg->value ("enabled_flags_", TF_ALL_NON_DEBUG).toInt ();
 
         b_ret = true;
         break;
