@@ -81,82 +81,82 @@ public:
     void
     show ();
 
-    //! the number of entries in the list
+    //! The number of entries in the list.
     int
     count () const {
         return message_list_.count ();
     }
 
-    //! clear all entries from the list
+    //! Clear all entries from the list.
     void
     clear () {
         message_list_.clear ();
     }
 
-    //! get an entry at a specific location
+    //! Get an entry at a specific location.
     const UserMsgEntry &
     at (
             int i) const {
         return message_list_.at (i);
     }
 
-    //! remove an entry at a specific location
+    //! Remove an entry at a specific location.
     void
     remove (
             int i) {
         message_list_.removeAt (i);
     }
 
-    //! Appends all entries in \p other entry to current entry
+    //! Appends all entries in \p other entry to current entry.
     void
     append (
             const UserMsg & other);
 
 
 
-    //! add an error entry to the list
+    //! Add an error entry to the list.
     inline void
     addErr (
             const QString & s_message) {
         addMsg (UserMsgEntry::UTERROR, s_message);
     }
 
-    //! add a warning entry to the list
+    //! add a warning entry to the list.
     inline void
     addWar (
             const QString & s_message) {
         addMsg (UserMsgEntry::UTWARNING, s_message);
     }
 
-    //! add an informative entry to the list
+    //! Add an informative entry to the list.
     inline void
     addInfo (
             const QString & s_message) {
         addMsg (UserMsgEntry::UTINFO, s_message);
     }
 
-    //! add an error entry to the list
+    //! Add an error entry to the list.
     inline void
     addDbgErr (
             const QString & s_message) {
         addMsg (UserMsgEntry::UTDBG_ERROR, s_message);
     }
 
-    //! add a warning entry to the list
+    //! Add a warning entry to the list.
     inline void
     addDbgWar (
             const QString & s_message) {
         addMsg (UserMsgEntry::UTDBG_ERROR, s_message);
     }
 
-    //! add an informative entry to the list
+    //! Add an informative entry to the list.
     inline void
     addDbgInfo (
             const QString & s_message) {
         addMsg (UserMsgEntry::UTDBG_INFO, s_message);
     }
 
-    //! add an entry to the list
+    //! Add an entry to the list.
     void
     addMsg (
             UserMsgEntry::Type ty,
@@ -165,55 +165,59 @@ public:
 
 
 
-    //! show an error entry
+    //! Show an error entry.
     static inline void
     err (
             const QString & s_message) {
         msg (UserMsgEntry::UTERROR, s_message);
     }
 
-    //! show a warning entry
+    //! Show a warning entry.
     static inline void
     war (
             const QString & s_message) {
         msg (UserMsgEntry::UTWARNING, s_message);
     }
 
-    //! show an informative entry
+    //! Show an informative entry.
     static inline void
     info (
             const QString & s_message) {
         msg (UserMsgEntry::UTINFO, s_message);
     }
 
-    //! show an error entry
+    //! Show an error entry.
     static inline void
     dbgErr (
             const QString & s_message) {
         msg (UserMsgEntry::UTDBG_ERROR, s_message);
     }
 
-    //! show a warning entry
+    //! Show a warning entry.
     static inline void
     dbgWar (
             const QString & s_message) {
         msg (UserMsgEntry::UTDBG_ERROR, s_message);
     }
 
-    //! show an informative entry
+    //! Show an informative entry.
     static inline void
     dbgInfo (
             const QString & s_message) {
         msg (UserMsgEntry::UTDBG_INFO, s_message);
     }
 
-    //! show an entry
+    //! Show an entry.
     static void
     msg (
             UserMsgEntry::Type ty,
             const QString & s_message);
 
 
+    //! Termination message.
+    static void
+    fatalException (
+            const QString & s_message);
 
 protected:
 
