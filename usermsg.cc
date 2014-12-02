@@ -12,6 +12,7 @@
 #include "usermsgman.h"
 
 #include <QVector>
+#include <QMessageBox>
 
 /**
  * @class UserMsg
@@ -141,9 +142,21 @@ void UserMsg::msg (
 /**
  * Uses the underlying platform to show the message.
  */
-void fatalException (const QString & s_message)
+void UserMsg::fatalException (const QString & s_message)
 {
     /** @todo stub */
 }
 /* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/**
+ * @returns either QMessageBox::Yes or QMessageBox::No.
+ */
+int UserMsg::consoleAskYN (const QString & s_message)
+{
+    /** @todo stub */
+    return QMessageBox::Yes;
+}
+/* ========================================================================= */
+
 

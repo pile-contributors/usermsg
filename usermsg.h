@@ -219,6 +219,12 @@ public:
     fatalException (
             const QString & s_message);
 
+
+    //! Ask a question at the console; accept Yes/No answer.
+    static int
+    consoleAskYN (
+            const QString & s_message);
+
 protected:
 
 private:
