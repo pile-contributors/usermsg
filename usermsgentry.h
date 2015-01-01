@@ -84,9 +84,7 @@ public:
 
     //! Tell if the type is visible or not.
     bool
-    isEnabled () const {
-        return isEnabled (type_);
-    }
+    isEnabled () const;
 
     //! Get the type.
     Type
