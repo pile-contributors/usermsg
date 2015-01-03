@@ -10,6 +10,8 @@
 #include <usermsg/usermsg.h>
 #include "usermsg-private.h"
 
+#include <QObject>
+
 /**
  * @class UserMsgEntry
  *
