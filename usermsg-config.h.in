@@ -10,25 +10,30 @@
 #ifndef GUARD_USERMSG_CONFIG_H_INCLUDE
 #define GUARD_USERMSG_CONFIG_H_INCLUDE
 
-
 /**
  * @def Qt5Core_FOUND
  * @brief When defined indicates that the Qt 5 headers are available
  */
+#ifndef Qt5Core_FOUND
 #cmakedefine Qt5Core_FOUND
+#endif
 
 /**
- * @def Qt5Core_FOUND
+ * @def Qt4_FOUND
  * @brief When defined indicates that the Qt 4 headers are available
  */
+#ifndef Qt4_FOUND
 #cmakedefine Qt4_FOUND
+#endif
 
 /**
  * @def PILES_HAVE_QT
  * @brief When defined indicates that either Qt 4 or Qt 5 headers are available
  */
 #if defined(Qt5Core_FOUND) || defined(Qt4_FOUND)
+#ifndef PILES_HAVE_QT
 #define PILES_HAVE_QT
+#endif
 #endif
 
 // use Qt definitions when available
