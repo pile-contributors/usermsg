@@ -12,7 +12,6 @@
 #include "usermsgman.h"
 
 #include <QVector>
-#include <QMessageBox>
 
 /**
  * @class UserMsg
@@ -155,7 +154,7 @@ void UserMsg::fatalException (const QString & s_message)
 int UserMsg::consoleAskYN (const QString & s_message)
 {
     /** @todo stub */
-    return QMessageBox::Yes;
+    return Yes;
 }
 /* ========================================================================= */
 
