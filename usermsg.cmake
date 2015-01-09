@@ -9,11 +9,11 @@ include(pile_support)
 
 # initialize this module
 macro    (usermsgInit
-          ref_cnt_use_mode)
+          usermsg_use_mode)
 
     # default name
-    if (NOT USER_MSG_INIT_NAME)
-        set(USER_MSG_INIT_NAME "UserMsg")
+    if (NOT USERMSG_INIT_NAME)
+        set(USERMSG_INIT_NAME "UserMsg")
     endif ()
 
     # compose the list of headers and sources
@@ -21,28 +21,32 @@ macro    (usermsgInit
         "usermsgman.h"
         "usermsgstg.h"
         "usermsgentry.h"
-        "usermsg.h")
+        "usermsg.h"
+        "impl/usermsg_impl.h")
     set(USERMSG_SOURCES
         "usermsgman.cc"
         "usermsgstg.cc"
         "usermsgentry.cc"
-        "usermsg.cc")
+        "usermsg.cc"
+        "impl/usermsg_json.cc"
+        "impl/usermsg_user.cc"
+        "impl/usermsg_xml.cc")
     set(USERMSG_QT_MODS
         "Core"
         "Widgets")
 
     pileSetSources(
-        "${USER_MSG_INIT_NAME}"
+        "${USERMSG_INIT_NAME}"
         "${USERMSG_HEADERS}"
         "${USERMSG_SOURCES}")
 
     pileSetCommon(
-        "${USER_MSG_INIT_NAME}"
+        "${USERMSG_INIT_NAME}"
         "0;0;1;d"
         "ON"
-        "${ref_cnt_use_mode}"
+        "${usermsg_use_mode}"
         ""
-        "category1"
-        "tag1;tag2")
+        "basics"
+        "user-interaction")
 
 endmacro ()
