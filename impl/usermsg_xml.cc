@@ -56,6 +56,7 @@ void USERMSG_EXPORT showUserMsgXml (const UserMsg & um)
     QFile serr;
     serr.open (stdout, QIODevice::WriteOnly);
     QDebug d (&serr);
+    d.nospace ().noquote ();
 
     int i_max = um.count ();
     if (i_max > 0) {

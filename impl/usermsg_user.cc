@@ -47,7 +47,7 @@ static QString escapeForUser (const QString & input)
 
 static QString dateForUser (const QDateTime & input)
 {
-    return input.toString (Qt::TextDate);
+    return input.toString (Qt::ISODate);
 }
 
 void USERMSG_EXPORT showUserMsgUser (const UserMsg & um)
@@ -55,10 +55,13 @@ void USERMSG_EXPORT showUserMsgUser (const UserMsg & um)
     QFile serr;
     serr.open (stdout, QIODevice::WriteOnly);
     QDebug d (&serr);
+    d.nospace ().noquote ();
 
     int i_max = um.count ();
     if (i_max > 0) {
-        d << um.title () << "\n";
+        if (!um.title ().isEmpty ()) {
+            d << um.title () << "\n";
+        }
         for (int i = 0; i < i_max; ++i) {
             const UserMsgEntry & e = um.at (i);
             if (e.isEnabled()) {
@@ -86,12 +89,13 @@ void USERMSG_EXPORT showUserMsgUser (const UserMsg & um)
                     d << "[     ]";
                     break; }
                 }
-                d << dateForUser (e.moment ())
-                  << ": "
+                d << " "
+                  << dateForUser (e.moment ())
+                  << "> "
                   << escapeForUser (e.message ())
                   << "\n";
             }
-            d << "\n";
+            //d << "\n";
         }
     }
 }
