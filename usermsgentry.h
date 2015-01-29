@@ -1,5 +1,5 @@
 /**
- * @file usermsgentryentry.h
+ * @file usermsgentry.h
  * @brief Declarations for UserMsgEntry class
  * @author 
  * @copyright Copyright 2014 piles contributors. All rights reserved.

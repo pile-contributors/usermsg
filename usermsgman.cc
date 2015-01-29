@@ -200,7 +200,7 @@ void UserMsgMan::disable ()
 
 /* ------------------------------------------------------------------------- */
 /**
- * .
+ *
  */
 void UserMsgMan::enable (bool collapse_messages)
 {

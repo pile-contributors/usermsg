@@ -74,7 +74,7 @@ UserMsg::UserMsg (const QString & title, void * user_data) :
 
 /* ------------------------------------------------------------------------- */
 /**
- * .
+ *
  */
 UserMsg::~UserMsg()
 {

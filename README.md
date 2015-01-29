@@ -1,4 +1,4 @@
-UserMsg
+UserMsg {#usermsg}
 =======
 
 UserMsg pile.

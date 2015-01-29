@@ -85,7 +85,7 @@ Following signals are available:
 - show message for a particular kind (one per kind) with extended
 information (time, title)
 
-@section usermsg_frontend UserMsg
+@section usermsg_usermsg UserMsg
 
 A message consists of an optional title, an optional user defined
 value (payload) and a list of zero or more entries.
