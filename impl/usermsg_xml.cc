@@ -53,10 +53,7 @@ static QString dateForXml (const QDateTime & input)
 void USERMSG_EXPORT showUserMsgXml (const UserMsg & um)
 {
     // << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-    QFile serr;
-    serr.open (stdout, QIODevice::WriteOnly);
-    QDebug d (&serr);
-    d.nospace ().noquote ();
+    QTextStream d(stdout);
 
     int i_max = um.count ();
     if (i_max > 0) {

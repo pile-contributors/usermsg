@@ -52,10 +52,7 @@ static QString dateForJson (const QDateTime & input)
 
 void USERMSG_EXPORT showUserMsgJson (const UserMsg & um)
 {
-    QFile serr;
-    serr.open (stdout, QIODevice::WriteOnly);
-    QDebug d (&serr);
-    d.nospace ().noquote ();
+    QTextStream d(stdout);
 
     int i_max = um.count ();
     if (i_max > 0) {
