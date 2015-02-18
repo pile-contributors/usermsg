@@ -295,12 +295,12 @@ void UserMsgMan::setCallbackShow ( UserMsgMan::KbShowMessage value)
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
-const QString &UserMsgMan::logFile()
+const QString & UserMsgMan::logFile()
 {
     USERMSG_TRACE_ENTRY;
     autostart ();
-    singleton_->settings_->logFile ();
     USERMSG_TRACE_EXIT;
+    return singleton_->settings_->logFile ();
 }
 /* ========================================================================= */
 
