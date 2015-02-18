@@ -243,8 +243,18 @@ void UserMsgMan::setVisible (
 {
     USERMSG_TRACE_ENTRY;
     autostart ();
-    USERMSG_TRACE_EXIT;
     (singleton_->settings_->setEnabled (ty, b_visible));
+    USERMSG_TRACE_EXIT;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+void UserMsgMan::setAllVisible (bool include_debug)
+{
+    USERMSG_TRACE_ENTRY;
+    autostart ();
+    (singleton_->settings_->setAllEnabled (include_debug));
+    USERMSG_TRACE_EXIT;
 }
 /* ========================================================================= */
 

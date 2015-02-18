@@ -65,6 +65,11 @@ public:
             UserMsgEntry::Type ty,
             bool b_enabled);
 
+    //! Enable all types
+    void
+    setAllEnabled (
+            bool include_debug);
+
 };
 
 #endif // GUARD_USERMSGSTG_H_INCLUDE

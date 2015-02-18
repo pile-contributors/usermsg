@@ -121,6 +121,11 @@ public:
             UserMsgEntry::Type ty,
             bool b_visible);
 
+    //! Enable all types (make them visible).
+    static void
+    setAllVisible (
+            bool include_debug);
+
     //! Shows an error message.
     static void
     show (

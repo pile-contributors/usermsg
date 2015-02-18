@@ -224,3 +224,10 @@ void UserMsgStg::setEnabled (UserMsgEntry::Type ty, bool b_enabled)
 }
 /* ========================================================================= */
 
+/* ------------------------------------------------------------------------- */
+void UserMsgStg::setAllEnabled(bool include_debug)
+{
+    if (include_debug) enabled_flags_ = TF_ALL;
+    else enabled_flags_ = TF_ALL_NON_DEBUG;
+}
+/* ========================================================================= */
