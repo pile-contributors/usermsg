@@ -114,6 +114,11 @@ public:
     setLogFile (
             const QString & value);
 
+    //! Give me the base name for log file and let me do the rest.
+    static void
+    autosetLogFile (
+            const QString & base_name);
+
 
     //! Sets the cache mode; no messages are being shown.
     static void

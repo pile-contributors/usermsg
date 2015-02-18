@@ -14,6 +14,9 @@
 
 #include <QThread>
 #include <QTextStream>
+#include <QDir>
+#include <QRegularExpression>
+#include <QStandardPaths>
 
 /**
  * @class UserMsgMan
@@ -312,6 +315,34 @@ void UserMsgMan::setLogFile (const QString & value)
     UM_RELEASE_LOCK;
 
     USERMSG_TRACE_EXIT;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+void UserMsgMan::autosetLogFile (const QString & base_name)
+{
+    QString s_log_path;
+    QString s_base_name = base_name;
+    s_base_name.replace (QRegularExpression ("\\s+"), "_");
+
+#   if defined(__WIN32__) || defined (_WIN32)
+
+    s_log_path = QStandardPaths::standardLocations (
+                QStandardPaths::DataLocation).at (0);
+    QDir d_lg (s_log_path);
+    if (!d_lg.exists ()) d_lg.mkpath (".");
+
+#   else
+
+    s_log_path = "/var/log";
+
+#   endif
+
+    QString s_log_file = QString("%1/%2.log")
+            .arg (s_log_path)
+            .arg (s_base_name);
+
+    UserMsgMan::setLogFile (s_log_file);
 }
 /* ========================================================================= */
 
