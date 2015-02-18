@@ -76,7 +76,8 @@ static TypeFlag typeToFlag (UserMsgEntry::Type ty)
  * Default values are loaded in this instance.
  */
 UserMsgStg::UserMsgStg() :
-    enabled_flags_(TF_ALL_NON_DEBUG)
+    enabled_flags_(TF_ALL_NON_DEBUG),
+    s_log_file_()
 {
     USERMSG_TRACE_ENTRY;
 
@@ -88,10 +89,11 @@ UserMsgStg::UserMsgStg() :
 /**
  * Values are copied from the \p other instance.
  */
-UserMsgStg::UserMsgStg (const UserMsgStg & other)
+UserMsgStg::UserMsgStg (const UserMsgStg & other) :
+    enabled_flags_(other.enabled_flags_),
+    s_log_file_(other.s_log_file_)
 {
     USERMSG_TRACE_ENTRY;
-
 
     USERMSG_TRACE_EXIT;
 }
@@ -122,6 +124,7 @@ QByteArray UserMsgStg::toByteArray () const
     out << QString(guard_string);
 
     out << enabled_flags_;
+    out << s_log_file_;
 
     out << QString(guard_string);
 
@@ -150,6 +153,7 @@ bool UserMsgStg::fromByteArray (QByteArray * value)
     }
 
     in >> enabled_flags_;
+    in >> s_log_file_;
 
     in >> guard;
     if (guard != guard_string) {
@@ -172,6 +176,7 @@ bool UserMsgStg::toQSettings ( QSettings * stg) const
     stg->beginGroup ("UserMsg");
 
     stg->setValue ("enabled_flags_", enabled_flags_);
+    stg->setValue ("s_log_file_", s_log_file_);
 
     stg->endGroup ();
     USERMSG_TRACE_EXIT;
@@ -192,6 +197,7 @@ bool UserMsgStg::fromQSettings ( QSettings * stg)
     for (;;) {
 
         enabled_flags_ = stg->value ("enabled_flags_", TF_ALL_NON_DEBUG).toInt ();
+        s_log_file_ = stg->value ("s_log_file_").toString ();
 
         b_ret = true;
         break;

@@ -1,7 +1,7 @@
 /**
  * @file usermsgman.cc
  * @brief Definitions for Example class.
- * @author 
+ * @author
  * @copyright Copyright 2014 piles contributors. All rights reserved.
  * This file is released under the
  * [MIT License](http://opensource.org/licenses/mit-license.html)
@@ -13,6 +13,7 @@
 #include "usermsgstg.h"
 
 #include <QThread>
+#include <QTextStream>
 
 /**
  * @class UserMsgMan
@@ -50,13 +51,13 @@ enum LockState {
 //! Aquire the lock; wait for it if necesary.
 #define UM_AQUIRE_LOCK \
     while (!singleton_->lock_.testAndSetAcquire (StateUnlocked, StateLocked)) { \
-        QThread::usleep (50); \
+    QThread::usleep (50); \
     }
 
 //! Release the lock.
 #define UM_RELEASE_LOCK \
     while (!singleton_->lock_.testAndSetRelease (StateLocked, StateUnlocked)) { \
-        QThread::usleep (50); \
+    QThread::usleep (50); \
     }
 
 /* ------------------------------------------------------------------------- */
@@ -77,15 +78,19 @@ UserMsgMan::UserMsgMan() :
     QObject(),
     enabled_ (true),
     settings_ (new UserMsgStg()),
-    message_list_(),
-    lock_(StateUnlocked),
-    kb_show_(NULL)
+    message_list_ (),
+    lock_ (StateUnlocked),
+    kb_show_ (NULL),
+    log_file_ (NULL),
+    logger_ (NULL)
 {
     USERMSG_TRACE_ENTRY;
     singleton_ = this;
 
     qRegisterMetaType<UserMsg>("UserMsg");
     qRegisterMetaType<UserMsgEntry>("UserMsgEntry");
+
+    _openLogFile ();
 
     USERMSG_TRACE_EXIT;
 }
@@ -98,6 +103,11 @@ UserMsgMan::UserMsgMan() :
 UserMsgMan::~UserMsgMan()
 {
     USERMSG_TRACE_ENTRY;
+    if (logger_ != NULL) {
+        logger_->flush ();
+        delete logger_;
+    }
+
     singleton_ = NULL;
     USERMSG_TRACE_EXIT;
 }
@@ -154,9 +164,10 @@ void UserMsgMan::end ()
 bool UserMsgMan::isInitialized ()
 {
     USERMSG_TRACE_ENTRY;
-    bool b_ret = (singleton_ != NULL);
-    USERMSG_TRACE_EXIT;
 
+    bool b_ret = (singleton_ != NULL);
+
+    USERMSG_TRACE_EXIT;
     return b_ret;
 }
 /* ========================================================================= */
@@ -190,10 +201,12 @@ void UserMsgMan::setSettings (const UserMsgStg & value)
 void UserMsgMan::disable ()
 {
     USERMSG_TRACE_ENTRY;
+
     autostart ();
     UM_AQUIRE_LOCK;
     singleton_->enabled_ = false;
     UM_RELEASE_LOCK;
+
     USERMSG_TRACE_EXIT;
 }
 /* ========================================================================= */
@@ -279,6 +292,30 @@ void UserMsgMan::setCallbackShow ( UserMsgMan::KbShowMessage value)
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
+const QString &UserMsgMan::logFile()
+{
+    USERMSG_TRACE_ENTRY;
+    autostart ();
+    singleton_->settings_->logFile ();
+    USERMSG_TRACE_EXIT;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+void UserMsgMan::setLogFile (const QString & value)
+{
+    USERMSG_TRACE_ENTRY;
+    autostart ();
+
+    UM_AQUIRE_LOCK;
+    singleton_->settings_->setLogFile (value);
+    UM_RELEASE_LOCK;
+
+    USERMSG_TRACE_EXIT;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
 void UserMsgMan::autostart()
 {
     if (singleton_ == NULL) {
@@ -301,6 +338,71 @@ void UserMsgMan::show (const UserMsg & um)
     } else {
         singleton_->_addMessageToQueue (um);
     }
+
+    singleton_->_logMessage (um);
+
+    USERMSG_TRACE_EXIT;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/**
+ * If log is available logs the message, otherwise does nothing.
+ */
+void UserMsgMan::_logMessage (const UserMsg & um)
+{
+    USERMSG_TRACE_ENTRY;
+
+    if (logger_ != NULL) {
+
+        int i_max = um.count ();
+        if (i_max > 0) {
+
+            UM_AQUIRE_LOCK;
+            const QString & t = um.title ();
+            if (t.isEmpty ()) {
+                (*logger_) << "Message" << endl;
+            } else {
+                (*logger_) << um.title () << endl;
+            }
+            for (int i = 0; i < i_max; ++i) {
+                const UserMsgEntry & e = um.at (i);
+
+                (*logger_) << "  "
+                           << e.moment ().toString (Qt::ISODate)
+                           << " ";
+
+                switch (e.type ()) {
+                case UserMsgEntry::UTERROR: {
+                    (*logger_) << "error";
+                    break; }
+                case UserMsgEntry::UTWARNING: {
+                    (*logger_) << "warning";
+                    break; }
+                case UserMsgEntry::UTINFO: {
+                    (*logger_) << "info";
+                    break; }
+                case UserMsgEntry::UTDBG_ERROR: {
+                    (*logger_) << "derror";
+                    break; }
+                case UserMsgEntry::UTDBG_WARNING: {
+                    (*logger_) << "dwarning";
+                    break; }
+                case UserMsgEntry::UTDBG_INFO: {
+                    (*logger_) << "debug";
+                    break; }
+                default: {
+                    (*logger_) << "null";
+                    break; }
+                }
+                (*logger_) << ": ";
+
+                (*logger_) << e.message () << endl;
+            }
+            UM_RELEASE_LOCK;
+        }
+    }
+
     USERMSG_TRACE_EXIT;
 }
 /* ========================================================================= */
@@ -347,6 +449,40 @@ void UserMsgMan::_showQueue (bool collapse_messages)
     }
 
     message_list_.clear ();
+    UM_RELEASE_LOCK;
+    USERMSG_TRACE_EXIT;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+void UserMsgMan::_openLogFile ()
+{
+    USERMSG_TRACE_ENTRY;
+    UM_AQUIRE_LOCK;
+
+    if (logger_ != NULL) {
+        logger_->flush ();
+        delete logger_;
+    }
+
+    if (log_file_ != NULL) {
+        if (log_file_->isOpen ()) {
+            log_file_->close ();
+        }
+        delete log_file_;
+    }
+
+    const QString & s_log_file_path = settings_->logFile ();
+    if (!s_log_file_path.isEmpty ()) {
+        log_file_ = new QFile (s_log_file_path);
+        if (log_file_->open (QIODevice::WriteOnly | QIODevice::Text)) {
+            logger_ = new QTextStream (log_file_);
+        } else {
+            delete log_file_;
+            log_file_ = NULL;
+        }
+    }
+
     UM_RELEASE_LOCK;
     USERMSG_TRACE_EXIT;
 }

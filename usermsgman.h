@@ -15,9 +15,12 @@
 
 #include <QObject>
 #include <QAtomicInt>
+#include <QFile>
 
 class UserMsgStg;
 class UserMsg;
+
+class QTextStream;
 
 //! brief description
 class USERMSG_EXPORT UserMsgMan : public QObject {
@@ -43,7 +46,13 @@ private:
     lock_; /** lock for using shared resources*/
 
     KbShowMessage
-    kb_show_;
+    kb_show_; /**< callback for showing messages */
+
+    QFile *
+    log_file_; /**< log file */
+
+    QTextStream *
+    logger_; /**< log file */
 
     static UserMsgMan *
     singleton_; /**< the one and only instance */
@@ -94,6 +103,16 @@ public:
     static void
     setCallbackShow (
             KbShowMessage value);
+
+
+    //! The path to the log file.
+    static const QString &
+    logFile ();
+
+    //! Set the path to the log file
+    static void
+    setLogFile (
+            const QString & value);
 
 
     //! Sets the cache mode; no messages are being shown.
@@ -152,6 +171,15 @@ private:
     void
     _showQueue (
             bool collapse_messages);
+
+    //! Prepares the log file to be used.
+    void
+    _openLogFile ();
+
+    //! Log the message.
+    void
+    _logMessage (
+            const UserMsg & um);
 
 signals:
 

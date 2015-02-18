@@ -20,7 +20,8 @@ class USERMSG_EXPORT UserMsgStg {
 
 private:
 
-    int enabled_flags_;
+    int enabled_flags_; /**< combination of 1 bit flags */
+    QString s_log_file_; /**< the log file, if any */
 
 public:
 
@@ -69,6 +70,20 @@ public:
     void
     setAllEnabled (
             bool include_debug);
+
+    //! The path to the log file.
+    const QString &
+    logFile () {
+        return s_log_file_;
+    }
+
+    //! Set the path to the log file
+    void
+    setLogFile (
+            const QString & value) {
+        s_log_file_ = value;
+    }
+
 
 };
 
