@@ -110,6 +110,9 @@ UserMsgMan::~UserMsgMan()
         logger_->flush ();
         delete logger_;
     }
+    if (log_file_ != NULL) {
+        delete log_file_;
+    }
 
     singleton_ = NULL;
     USERMSG_TRACE_EXIT;
@@ -312,6 +315,7 @@ void UserMsgMan::setLogFile (const QString & value)
 
     UM_AQUIRE_LOCK;
     singleton_->settings_->setLogFile (value);
+    singleton_->_openLogFile ();
     UM_RELEASE_LOCK;
 
     USERMSG_TRACE_EXIT;
@@ -405,25 +409,25 @@ void UserMsgMan::_logMessage (const UserMsg & um)
 
                 switch (e.type ()) {
                 case UserMsgEntry::UTERROR: {
-                    (*logger_) << "error";
+                    (*logger_) << "error   ";
                     break; }
                 case UserMsgEntry::UTWARNING: {
-                    (*logger_) << "warning";
+                    (*logger_) << "warning ";
                     break; }
                 case UserMsgEntry::UTINFO: {
-                    (*logger_) << "info";
+                    (*logger_) << "info    ";
                     break; }
                 case UserMsgEntry::UTDBG_ERROR: {
-                    (*logger_) << "derror";
+                    (*logger_) << "derror  ";
                     break; }
                 case UserMsgEntry::UTDBG_WARNING: {
                     (*logger_) << "dwarning";
                     break; }
                 case UserMsgEntry::UTDBG_INFO: {
-                    (*logger_) << "debug";
+                    (*logger_) << "debug   ";
                     break; }
                 default: {
-                    (*logger_) << "null";
+                    (*logger_) << "null    ";
                     break; }
                 }
                 (*logger_) << ": ";
@@ -486,14 +490,17 @@ void UserMsgMan::_showQueue (bool collapse_messages)
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
+/**
+ * @warning The caller must aquire the lock itself.
+ */
 void UserMsgMan::_openLogFile ()
 {
     USERMSG_TRACE_ENTRY;
-    UM_AQUIRE_LOCK;
 
     if (logger_ != NULL) {
         logger_->flush ();
         delete logger_;
+        logger_ = NULL;
     }
 
     if (log_file_ != NULL) {
@@ -501,6 +508,7 @@ void UserMsgMan::_openLogFile ()
             log_file_->close ();
         }
         delete log_file_;
+        log_file_ = NULL;
     }
 
     const QString & s_log_file_path = settings_->logFile ();
@@ -514,7 +522,6 @@ void UserMsgMan::_openLogFile ()
         }
     }
 
-    UM_RELEASE_LOCK;
     USERMSG_TRACE_EXIT;
 }
 /* ========================================================================= */

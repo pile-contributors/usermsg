@@ -171,7 +171,7 @@ public:
     inline void
     addDbgWar (
             const QString & s_message) {
-        addMsg (UserMsgEntry::UTDBG_ERROR, s_message);
+        addMsg (UserMsgEntry::UTDBG_WARNING, s_message);
     }
 
     //! Add an informative entry to the list.
