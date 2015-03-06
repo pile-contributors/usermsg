@@ -22,12 +22,14 @@ macro    (usermsgInit
         "usermsgstg.h"
         "usermsgentry.h"
         "usermsg.h"
+        "logmsg.h"
         "impl/usermsg_impl.h")
     set(USERMSG_SOURCES
         "usermsgman.cc"
         "usermsgstg.cc"
         "usermsgentry.cc"
         "usermsg.cc"
+        "logmsg.cc"
         "impl/usermsg_json.cc"
         "impl/usermsg_user.cc"
         "impl/usermsg_xml.cc")

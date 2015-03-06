@@ -19,12 +19,15 @@
 
 class UserMsgStg;
 class UserMsg;
+class LogMsg;
 
 class QTextStream;
 
 //! brief description
 class USERMSG_EXPORT UserMsgMan : public QObject {
     Q_OBJECT
+
+    friend class LogMsg;
 
 public:
 
@@ -155,7 +158,7 @@ public:
     show (
             const UserMsg & um);
 
-private:
+protected:
 
     //! used internally to start the manager if not started already
     static void
@@ -194,6 +197,6 @@ signals:
              UserMsg um);
 
 
-};
+}; // class UserMsgMan
 
 #endif // GUARD_USERMSGMAN_H_INCLUDE
