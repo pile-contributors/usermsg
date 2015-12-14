@@ -28,7 +28,7 @@
  * but it does not have to. Any static
  * function that will be invoked will first check
  * for its existance and it will create it
- * if it does not exists.
+ * if it does not exist.
  *
  * Resources can be freed using
  * UserMsgMan::end(), for example at the end of
