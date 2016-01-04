@@ -34,17 +34,17 @@ enum TypeFlag {
     TF_ERROR = 0x0001,
     TF_WARNING = 0x0002,
     TF_INFO = 0x0004,
-    TF_DBG_ERROR = 0x0008,
-    TF_DBG_WARNING = 0x0010,
-    TF_DBG_INFO = 0x0020,
+    TF_DEBUGM_ERROR = 0x0008,
+    TF_DEBUGM_WARNING = 0x0010,
+    TF_DEBUGM_INFO = 0x0020,
 
     TF_ALL_NON_DEBUG =
         TF_ERROR | TF_WARNING | TF_INFO,
     TF_ALL_DEBUG =
-        TF_DBG_ERROR | TF_DBG_WARNING | TF_DBG_INFO,
+        TF_DEBUGM_ERROR | TF_DEBUGM_WARNING | TF_DEBUGM_INFO,
     TF_ALL =
         TF_ERROR | TF_WARNING | TF_INFO |
-        TF_DBG_ERROR | TF_DBG_WARNING | TF_DBG_INFO,
+        TF_DEBUGM_ERROR | TF_DEBUGM_WARNING | TF_DEBUGM_INFO,
 };
 
 
@@ -60,9 +60,9 @@ static TypeFlag typeToFlag (UserMsgEntry::Type ty)
     case UserMsgEntry::UTERROR: return TF_ERROR;
     case UserMsgEntry::UTWARNING: return TF_WARNING;
     case UserMsgEntry::UTINFO: return TF_INFO;
-    case UserMsgEntry::UTDBG_ERROR: return TF_DBG_ERROR;
-    case UserMsgEntry::UTDBG_WARNING: return TF_DBG_WARNING;
-    case UserMsgEntry::UTDBG_INFO: return TF_DBG_INFO;
+    case UserMsgEntry::UTDBG_ERROR: return TF_DEBUGM_ERROR;
+    case UserMsgEntry::UTDBG_WARNING: return TF_DEBUGM_WARNING;
+    case UserMsgEntry::UTDBG_INFO: return TF_DEBUGM_INFO;
     default: return TF_NONE;
     }
 

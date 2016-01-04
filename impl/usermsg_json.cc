@@ -15,6 +15,10 @@
 #include <QDebug>
 #include <QFile>
 #include <QDateTime>
+#include <QTextStream>
+
+#include <stdlib.h>
+#include <stdio.h>
 
 static QString escapeForJson (const QString & input)
 {
@@ -52,8 +56,8 @@ static QString dateForJson (const QDateTime & input)
 
 void USERMSG_EXPORT showUserMsgJson (const UserMsg & um)
 {
-    QTextStream d(stdout);
 
+    QTextStream d (stderr, QIODevice::WriteOnly);
     int i_max = um.count ();
     if (i_max > 0) {
         d << "{"

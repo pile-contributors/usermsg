@@ -52,7 +52,7 @@ static QString dateForUser (const QDateTime & input)
 
 void USERMSG_EXPORT showUserMsgUser (const UserMsg & um)
 {
-    QTextStream d(stdout);
+    QTextStream d (stderr, QIODevice::WriteOnly);
 
     int i_max = um.count ();
     if (i_max > 0) {

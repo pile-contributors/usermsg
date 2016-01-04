@@ -1,6 +1,6 @@
 
 # enable/disable cmake debug messages related to this pile
-set (USERMSG_DEBUG_MSG ON)
+set (USERMSG_DEBUG_MSG OFF)
 
 # make sure support code is present; no harm
 # in including it twice; the user, however, should have used
@@ -22,12 +22,14 @@ macro    (usermsgInit
         "usermsgstg.h"
         "usermsgentry.h"
         "usermsg.h"
+        "logmsg.h"
         "impl/usermsg_impl.h")
     set(USERMSG_SOURCES
         "usermsgman.cc"
         "usermsgstg.cc"
         "usermsgentry.cc"
         "usermsg.cc"
+        "logmsg.cc"
         "impl/usermsg_json.cc"
         "impl/usermsg_user.cc"
         "impl/usermsg_xml.cc")
