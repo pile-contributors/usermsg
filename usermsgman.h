@@ -197,6 +197,7 @@ signals:
              UserMsg um);
 
 
+public: virtual void anchorVtable() const;
 }; // class UserMsgMan
 
 #endif // GUARD_USERMSGMAN_H_INCLUDE

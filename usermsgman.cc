@@ -545,3 +545,4 @@ void UserMsgMan::_addMessageToQueue (const UserMsg & um)
 }
 /* ========================================================================= */
 
+void UserMsgMan::anchorVtable () const {}
