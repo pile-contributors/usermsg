@@ -14,7 +14,7 @@ user has some flexibility in implementing the front-end.
 @section usermsg_manager Manager class
 
 UserMsgMan is the manager class. A singleton is created
-internally and it manages the settings and behaviour
+internally and it manages the settings and behavior
 of UserMsg. The manager can be explicitly initialized
 but it does not have to. Any static function that will
 be invoked will first check for its existance and it

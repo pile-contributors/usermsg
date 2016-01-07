@@ -22,7 +22,7 @@
  * @class UserMsgMan
  *
  * A singleton is created internally and it
- * manages the settings and behaviour of UserMsg.
+ * manages the settings and behavior of UserMsg.
  *
  * The manager can be explicitly initialized
  * but it does not have to. Any static
