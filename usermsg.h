@@ -187,8 +187,23 @@ public:
             UserMsgEntry::Type ty,
             const QString & s_message);
 
+    //! Adds messages from two instances and deposits them in a new one.
+    UserMsg operator+ (const UserMsg & s) const;
+    UserMsg & operator+= (const UserMsg & s);
 
+    //! Adds the string as an error message and deposits them in a new instance.
+    UserMsg operator+ (const QString & s) const;
+    UserMsg & operator+= (const QString & s);
 
+    //! Adds the string as a warning message and deposits them in a new instance.
+    UserMsg operator& (const QString & s) const;
+    UserMsg & operator&= (const QString & s);
+
+    //! Adds the string as an informative message and deposits them in a new instance.
+    UserMsg operator* (const QString & s) const;
+    UserMsg & operator*= (const QString & s);
+
+public:
 
     //! Show an error entry.
     static inline void

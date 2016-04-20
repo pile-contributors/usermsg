@@ -491,7 +491,7 @@ void UserMsgMan::_showQueue (bool collapse_messages)
 
 /* ------------------------------------------------------------------------- */
 /**
- * @warning The caller must aquire the lock itself.
+ * @warning The caller must acquire the lock itself.
  */
 void UserMsgMan::_openLogFile ()
 {
