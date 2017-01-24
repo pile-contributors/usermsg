@@ -155,6 +155,7 @@ void UserMsgMan::end ()
 
     if (singleton_ != NULL) {
         delete singleton_;
+        singleton_ = NULL;
     }
 
     USERMSG_TRACE_EXIT;
