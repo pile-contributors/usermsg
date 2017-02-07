@@ -27,15 +27,15 @@ static QString escapeForUser (const QString & input)
            result.append ("\\\\");
         } else if (c == '/') {
             result.append ("\\/");
-        } else if (c == 8) {
+        } else if (c == QChar(8)) {
             result.append ("\\b");
-        } else if (c == 9) {
+        } else if (c == QChar(9)) {
             result.append ("\\t");
-        } else if (c == 10) {
+        } else if (c == QChar(10)) {
             result.append ("\\n");
-        } else if (c == 12) {
+        } else if (c == QChar(12)) {
             result.append ("\\f");
-        } else if (c == 13) {
+        } else if (c == QChar(13)) {
             result.append ("\\r");
         } else {
             result.append (c);
