@@ -31,11 +31,11 @@ static QString escapeForXml (const QString & input)
             result.append ("&apos;");
         } else if (c == '"') {
             result.append ("&quot;");
-        } else if (c == 13) {
+        } else if (c == QChar(13)) {
             result.append ("&#x0d;");
-        } else if (c == 10) {
+        } else if (c == QChar(10)) {
             result.append ("&#x0a;");
-        } else if (c == 9) {
+        } else if (c == QChar(9)) {
             result.append ("&#x09;");
         } else {
             result.append (c);
