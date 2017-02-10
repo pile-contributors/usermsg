@@ -26,7 +26,8 @@
  *
  */
 
-static const char * guard_string = "./guard/.";
+static QString guard_string ("./guard/.");
+static QString ver2_string ("./ver2/.");
 
 enum TypeFlag {
     TF_NONE = 0x0000,
@@ -77,7 +78,9 @@ static TypeFlag typeToFlag (UserMsgEntry::Type ty)
  */
 UserMsgStg::UserMsgStg() :
     enabled_flags_(TF_ALL_NON_DEBUG),
-    s_log_file_()
+    s_log_file_(),
+    log_count_ (10), // keep ten old logs
+    roll_trigger_ (1024*1024*2) // two megabytes log size by default
 {
     USERMSG_TRACE_ENTRY;
 
@@ -91,7 +94,9 @@ UserMsgStg::UserMsgStg() :
  */
 UserMsgStg::UserMsgStg (const UserMsgStg & other) :
     enabled_flags_(other.enabled_flags_),
-    s_log_file_(other.s_log_file_)
+    s_log_file_(other.s_log_file_),
+    log_count_(other.log_count_),
+    roll_trigger_(other.roll_trigger_)
 {
     USERMSG_TRACE_ENTRY;
 
@@ -121,12 +126,15 @@ QByteArray UserMsgStg::toByteArray () const
     QBuffer buffer;
     buffer.open (QBuffer::WriteOnly);
     QDataStream out(&buffer);
-    out << QString(guard_string);
+    out << guard_string;
 
     out << enabled_flags_;
     out << s_log_file_;
-
-    out << QString(guard_string);
+    out << guard_string;
+    out << ver2_string;
+    out << log_count_;
+    out << roll_trigger_;
+    out << guard_string;
 
     USERMSG_TRACE_EXIT;
     return buffer.buffer ();
@@ -142,7 +150,7 @@ bool UserMsgStg::fromByteArray (QByteArray * value)
     USERMSG_TRACE_ENTRY;
     QString guard;
     QBuffer buffer (value);
-    buffer.open(QIODevice::ReadOnly);
+    buffer.open (QIODevice::ReadOnly);
 
     QDataStream in (&buffer);
 
@@ -154,8 +162,16 @@ bool UserMsgStg::fromByteArray (QByteArray * value)
 
     in >> enabled_flags_;
     in >> s_log_file_;
-
     in >> guard;
+    if (guard == ver2_string) {
+        // added on 2017-02-10; strings generated prior to this date
+        // will not have following fields:
+        in >> log_count_;
+        in >> roll_trigger_;
+        in >> guard;
+    }
+    sanityCheck ();
+
     if (guard != guard_string) {
         USERMSG_DEBUGM ("End guard not found in stream.\n");
         return false;
@@ -177,6 +193,8 @@ bool UserMsgStg::toQSettings ( QSettings * stg) const
 
     stg->setValue ("enabled_flags_", enabled_flags_);
     stg->setValue ("s_log_file_", s_log_file_);
+    stg->setValue ("log_count_", log_count_);
+    stg->setValue ("roll_trigger_", roll_trigger_);
 
     stg->endGroup ();
     USERMSG_TRACE_EXIT;
@@ -198,10 +216,13 @@ bool UserMsgStg::fromQSettings ( QSettings * stg)
 
         enabled_flags_ = stg->value ("enabled_flags_", TF_ALL_NON_DEBUG).toInt ();
         s_log_file_ = stg->value ("s_log_file_").toString ();
+        log_count_ = stg->value ("log_count_", 10).toInt ();
+        roll_trigger_ = stg->value ("roll_trigger_", 1024*1024*10).toInt ();
 
         b_ret = true;
         break;
     }
+    sanityCheck ();
 
     stg->endGroup ();
     USERMSG_TRACE_EXIT;
@@ -235,5 +256,23 @@ void UserMsgStg::setAllEnabled(bool include_debug)
 {
     if (include_debug) enabled_flags_ = TF_ALL;
     else enabled_flags_ = TF_ALL_NON_DEBUG;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+void UserMsgStg::sanityCheck ()
+{
+    // log_count_ sanity check
+    if (log_count_ < 0) {
+        log_count_ = 1;
+    } else if (log_count_ > 1000) {
+        log_count_ = 10;
+    }
+    // roll_trigger_  sanity check
+    if (roll_trigger_ < 0) {
+        roll_trigger_ = 1024*1024*1;
+    } else if (roll_trigger_ > 1024*1024*1024*1) {
+        roll_trigger_ = 1024*1024*10;
+    }
 }
 /* ========================================================================= */

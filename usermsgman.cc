@@ -385,6 +385,36 @@ void UserMsgMan::show (const UserMsg & um)
 /**
  * If log is available logs the message, otherwise does nothing.
  */
+void UserMsgMan::_logPrefix (const UserMsgEntry & e)
+{
+    USERMSG_TRACE_ENTRY;
+    (*logger_) << "  "
+               << e.moment ().toString (Qt::ISODate)
+               << " ";
+    USERMSG_TRACE_EXIT;
+}
+/* ========================================================================= */
+
+
+/* ------------------------------------------------------------------------- */
+/**
+ * If log is available logs the message, otherwise does nothing.
+ *
+ * Each line in the log file starts with a preamble that tells the time
+ * when that message was produced, the type of the message and actual content.
+ * When a message has more than one line the text is padded without
+ * repetaing the timestamp.
+ *
+ * Here are some examples ("|" character is there just to indicate the
+ * start of the line and is not part of the actual output):
+ * @code
+ * |  2017-02-10T21:37:49 title   : This is where a UserMsg starts
+ * |  2017-02-10T21:37:49 error   : Text of the error message
+ * |                              : that extends on two lines.
+ * |  2017-02-10T21:37:46 warning : Warning message
+ * |  2017-02-10T21:37:46 debug   : Debug message
+ * @endcode
+ */
 void UserMsgMan::_logMessage (const UserMsg & um)
 {
     USERMSG_TRACE_ENTRY;
@@ -397,16 +427,14 @@ void UserMsgMan::_logMessage (const UserMsg & um)
             UM_AQUIRE_LOCK;
             const QString & t = um.title ();
             if (t.isEmpty ()) {
-                (*logger_) << "Message" << endl;
-            } else {
+                _logPrefix (um.at (0));
+                (*logger_) << "title   ";
                 (*logger_) << um.title () << endl;
             }
+
             for (int i = 0; i < i_max; ++i) {
                 const UserMsgEntry & e = um.at (i);
-
-                (*logger_) << "  "
-                           << e.moment ().toString (Qt::ISODate)
-                           << " ";
+                _logPrefix (e);
 
                 switch (e.type ()) {
                 case UserMsgEntry::UTERROR: {
@@ -433,7 +461,14 @@ void UserMsgMan::_logMessage (const UserMsg & um)
                 }
                 (*logger_) << ": ";
 
-                (*logger_) << e.message () << endl;
+                // Have the start of the text align with the rest of the
+                // message in lines other than the first
+                // for redability.
+                static QChar new_line ('\n');
+                static QLatin1String new_line_padding (
+                            "\n                              : ");
+                QString final = e.message ();
+                (*logger_) << final.replace (new_line, new_line_padding, Qt::CaseInsensitive) << endl;
             }
             UM_RELEASE_LOCK;
         }
@@ -492,6 +527,74 @@ void UserMsgMan::_showQueue (bool collapse_messages)
 
 /* ------------------------------------------------------------------------- */
 /**
+ * This method checks to see if the trigger file size was reached an,
+ * if so, starts the roll feature:
+ *
+ * - deletes last possible log file;
+ * - moves each log file to next number;
+ * - moves current log file to log.1.
+ */
+void UserMsgMan::_logRollFeature (const QString & s_log_file_path)
+{
+    USERMSG_TRACE_ENTRY;
+
+    for (;;) {
+        int roll_trigger = settings_->maxLogFileSize ();
+        int log_count = settings_->oldLogFilesCount ();
+
+        // Check the size to see if we need to do this at this time?
+        QFile current_file (s_log_file_path);
+        if (current_file.size() < roll_trigger) {
+            break;
+        }
+
+        // We do; start by deleting the last file, if any.
+        static const QString roll_files ("%1.%2");
+        QFile last_file (
+                    QString (roll_files)
+                    .arg (s_log_file_path)
+                    .arg (log_count));
+        if (last_file.exists()) {
+            if (!last_file.remove ()) {
+                printf("Cannot remove last log file");
+            }
+        }
+
+        // Next, move each file to next number.
+        QString to = last_file.fileName ();
+        QString from;
+        for (int i = log_count-1; i > 0; --i) {
+            from = QString (roll_files)
+                    .arg (s_log_file_path)
+                    .arg (i);
+            QFile file (from);
+            if (file.exists()) {
+                if (!file.copy (to)) {
+                    printf("Cannot copy log file");
+                }
+                if (!file.remove ()) {
+                    printf("Cannot move log file");
+                }
+            }
+            to = from;
+        }
+
+        // Finally move current file out of the way.
+        if (!current_file.copy (to)) {
+            printf("Cannot copy current log file");
+        }
+        if (!current_file.remove ()) {
+            printf("Cannot move current log file");
+        }
+        break;
+    }
+
+    USERMSG_TRACE_EXIT;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/**
  * @warning The caller must acquire the lock itself.
  */
 void UserMsgMan::_openLogFile ()
@@ -514,10 +617,21 @@ void UserMsgMan::_openLogFile ()
 
     const QString & s_log_file_path = settings_->logFile ();
     if (!s_log_file_path.isEmpty ()) {
+
+        int flg = QIODevice::WriteOnly | QIODevice::Text;
+        if (settings_->oldLogFilesCount () == 0) {
+            // 0 will overwrite the log file on each start
+        } else {
+            flg = flg | QIODevice::Append;
+            _logRollFeature (s_log_file_path);
+        }
+
         log_file_ = new QFile (s_log_file_path);
-        if (log_file_->open (QIODevice::WriteOnly | QIODevice::Text)) {
+        if (log_file_->open ((QIODevice::OpenModeFlag)flg)) {
             logger_ = new QTextStream (log_file_);
         } else {
+            printf("Failed to open log file; logging will "
+                   "be disabled in this session.\n");
             delete log_file_;
             log_file_ = NULL;
         }

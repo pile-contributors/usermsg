@@ -102,7 +102,7 @@ public:
     static KbShowMessage
     callbackShow ();
 
-    //! Copy the settings to internal storage.
+    //! Set the callback for showing messages.
     static void
     setCallbackShow (
             KbShowMessage value);
@@ -188,6 +188,15 @@ protected:
     void
     _logMessage (
             const UserMsg & um);
+
+    void
+    _logPrefix (
+            const UserMsgEntry &e);
+
+    //! Feature that keeps the log files from filling the disk.
+    void
+    _logRollFeature (
+            const QString &s_log_file_path);
 
 signals:
 

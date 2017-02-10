@@ -22,6 +22,10 @@ private:
 
     int enabled_flags_; /**< combination of 1 bit flags */
     QString s_log_file_; /**< the log file, if any */
+    int log_count_; /**< number of logs to keep (0 will overwrite the
+                    log file on each start */
+    int roll_trigger_; /**< size of the log file in bytes that
+                       tells the program to start anew */
 
 public:
 
@@ -84,7 +88,37 @@ public:
         s_log_file_ = value;
     }
 
+    //! The number of old log files to keep around.
+    int
+    oldLogFilesCount () {
+        return log_count_;
+    }
 
+    //! The number of old log files to keep around.
+    void
+    setOldLogFilesCount (
+            int value) {
+        log_count_ = value;
+    }
+
+    //! Maximum size of the log file in bytes.
+    int
+    maxLogFileSize () {
+        return roll_trigger_;
+    }
+
+    //! Maximum size of the log file in bytes.
+    void
+    setMaxLogFileSize (
+            int value) {
+        roll_trigger_ = value;
+    }
+
+private:
+
+    //! Checks the values and brings them to sane values if necessary.
+    void
+    sanityCheck ();
 };
 
 #endif // GUARD_USERMSGSTG_H_INCLUDE

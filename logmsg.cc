@@ -1,7 +1,7 @@
 /**
  * @file usermsg.cc
  * @brief Definitions for UserMsg class.
- * @author 
+ * @author
  * @copyright Copyright 2014 piles contributors. All rights reserved.
  * This file is released under the
  * [MIT License](http://opensource.org/licenses/mit-license.html)
@@ -29,7 +29,8 @@
 void LogMsg::msg (
         UserMsgEntry::Type ty, const QString & s_message)
 {
-    UserMsg um (QObject::tr("log-only"));
+    static QLatin1String logtitle ("   ");
+    UserMsg um (logtitle);
     um.addMsg (ty, s_message);
     UserMsgMan::singleton()->_logMessage (um);
     um.clear ();
