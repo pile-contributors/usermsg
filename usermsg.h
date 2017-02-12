@@ -106,6 +106,10 @@ public:
     void
     show ();
 
+    //! Log the content of this structure without showing it.
+    void
+    loggit ();
+
     //! The number of entries in the list.
     int
     count () const {

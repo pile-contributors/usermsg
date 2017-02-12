@@ -158,6 +158,11 @@ public:
     show (
             const UserMsg & um);
 
+    //! Log the message.
+    static void
+    logMessage (
+            const UserMsg & um);
+
 protected:
 
     //! used internally to start the manager if not started already

@@ -382,6 +382,18 @@ void UserMsgMan::show (const UserMsg & um)
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
+void UserMsgMan::logMessage (const UserMsg &um)
+{
+    USERMSG_TRACE_ENTRY;
+    autostart ();
+
+    singleton_->_logMessage (um);
+
+    USERMSG_TRACE_EXIT;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
 /**
  * If log is available logs the message, otherwise does nothing.
  */
