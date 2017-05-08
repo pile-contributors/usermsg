@@ -108,6 +108,15 @@ void UserMsg::loggit ()
 
     clear ();
 }
+
+int UserMsg::errorCount () const
+{
+    int result = 0;
+    foreach(const UserMsgEntry & e, message_list_) {
+        result += (e.type() == UserMsgEntry::UTERROR ? 1 : 0);
+    }
+    return result;
+}
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */

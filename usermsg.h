@@ -116,6 +116,10 @@ public:
         return message_list_.count ();
     }
 
+    //! The number of errors in the list.
+    int
+    errorCount () const;
+
     //! Clear all entries from the list.
     void
     clear () {
